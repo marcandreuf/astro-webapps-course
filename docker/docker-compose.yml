@@ -1,0 +1,17 @@
+name: astro-webapps-course-dev-env
+
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile-web
+    image: astro-webapps-course-dev-img
+    container_name: astro-webapps-course-dev-container
+    user: node
+    ports:
+      - "3002:3002"
+    volumes:
+      - ../:/workspace:cached
+      - ${HOME}/.local/share/pnpm:/home/node/.local/share/pnpm:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
