@@ -1,0 +1,48 @@
+---
+const {
+  img,
+  alt,
+  pill,
+  title,
+  description,
+  authorImg,
+  authorName,
+  articleTime,
+} = Astro.props;
+---
+
+<article>
+  <img src={img} alt={alt} />
+  <p class="pill">{pill}</p>
+  <h2>{title}</h2>
+  <p>{description}</p>
+  <div class="author">
+    <img src={authorImg} alt={authorName} />
+    <div>
+        <p><strong>{authorName}</strong></p>
+        <p>{articleTime}</p>
+    </div>
+  </div>
+</article>
+
+<style is:global>
+  img {
+    display: block;
+    max-width: 100%;
+  }
+</style>
+
+<style>
+  article {
+    max-width: 300px;
+  }
+  .author {
+    display:flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .author img {
+    width: 40px;
+    border-radius: 100vmax;
+  }
+</style>

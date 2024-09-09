@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Card from "../../components/Card.astro";
+
+import imgCar from "../../assets/car.png"
+import imgCarrie from "../../assets/carrie.png"
+
+const cardData = {
+	alt: "img card",
+    pill: "Science",
+    title: "Exploring the Cosmos",
+    description: "A journey through the wonders of our universe",
+    authorName: "Jane Doe",
+    articleTime: "2d ago"
+};
+
+
+---
+
+<BaseLayout>
+	<h1>About</h1>
+	<Card
+        img={imgCar.src}
+        alt={cardData.alt}
+        pill={cardData.pill}
+        title={cardData.title}
+        description={cardData.description}
+        authorImg={imgCarrie.src}
+        authorName={cardData.authorName}
+        articleTime={cardData.articleTime}   
+    />
+</BaseLayout>

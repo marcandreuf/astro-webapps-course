@@ -1,0 +1,22 @@
+---
+import Card from "../components/Card.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+import imgCar from "../assets/car.png"
+import imgCarrie from "../assets/carrie.png"
+
+---
+
+<BaseLayout>
+	<Card 
+        img={imgCar.src}
+        alt="img card"
+        pill="Technology"
+        title="Card title"
+        description="card description here"
+        authorImg={imgCarrie.src}
+        authorName="Author name"
+        articleTime="9h ago"   
+    />
+</BaseLayout>
+
