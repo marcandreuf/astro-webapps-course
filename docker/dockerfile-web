@@ -1,14 +1,12 @@
 FROM node:22-bookworm
 
-WORKDIR /workspace
-
 RUN apt update && apt upgrade -y && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 
-RUN npm install -g npm@10.8.2 && \
+RUN npm install -g npm@latest && \
     npm install -g pnpm && \
     pnpm --version
 
@@ -25,6 +23,9 @@ ENV PATH="${PNPM_HOME}:${PATH}"
 RUN SHELL="bash" && \
     pnpm config set store-dir "${PNPM_HOME}/store" && \
     pnpm install -g typescript && \
-    pnpm -g install pnpm && \
+    pnpm self-update && \
     pnpm --version && tsc --version
     
+WORKDIR /home/node/workspace
+
+CMD [ "node" ]

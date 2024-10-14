@@ -4,8 +4,8 @@
 	"name": "astro-webapps-course",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"dockerComposeFile": "../docker/docker-compose.yml",
-	"service": "web",
-	"workspaceFolder": "/workspace",
+	"service": "web_dev",
+	"workspaceFolder": "/home/node/workspace",
 	"shutdownAction": "stopCompose",
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {}

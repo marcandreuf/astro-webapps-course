@@ -2,7 +2,7 @@ name: astro-webapps-course-dev-env
 
 services:
 
-  web:
+  web_dev:
     build:
       context: .
       dockerfile: dockerfile-web
@@ -12,6 +12,14 @@ services:
     ports:
       - "3002:3002"
     volumes:
-      - ../:/workspace:cached
+      - ../:/home/node/workspace:cached
       - ${HOME}/.local/share/pnpm:/home/node/.local/share/pnpm:cached
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
