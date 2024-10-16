@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content"
+import Heading from "../ui/Heading.astro"
+
+const features = await getCollection("features");
+console.log(features);
+---
+
+
+<section aria-label="Features Banner" class="features" >
+    <div>
+        <Heading tagName="h2" size="h2">
+            I build fast, sleek, custom websites.
+        </Heading>
+        <ul>
+
+        </ul>
+    </div>
+</section>
