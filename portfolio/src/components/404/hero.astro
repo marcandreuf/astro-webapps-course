@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+
+// Components
+import Heading from "../ui/Heading.astro";
+import Link from "../ui/Link.astro";
+
+//Assets
+import profileImg from "@/assets/profile.png";
+---
+
+
+<header aria-label="Introduction to Marc" class="hero-home" >
+    <Image 
+        src={profileImg}
+        width={200}
+        alt="Marc Andreu profile"
+        format="avif"
+        class="avatar"
+    />
+    <Heading tagName="h1" size="h2">Are you lost?</Heading>
+    <p>Oops! The page you're looking for seems to have wandered off. 
+        Please try again or visit our homepage for more information.</p>
+    <div>        
+        <Link href="/">Go home</Link>
+    </div>
+</header>
+
