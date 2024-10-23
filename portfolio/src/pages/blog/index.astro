@@ -1,0 +1,51 @@
+---
+// astro tools
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+// components
+import PostCard from "@/components/ui/PostCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Heading from "@/components/ui/Heading.astro";
+
+//assets
+import profileImg from "@/assets/profile.png";
+
+
+//data
+// Get one post
+// const postEntry = await getEntry("posts", "bring-out-your-inner-artist");
+// Get all posts
+const allPosts = await getCollection("posts",
+    ({data}) => !data.isDraft);
+---
+
+<BaseLayout title="Blog">
+    <section aria-label="Blog Posts">
+        <div class="blog-wrapper">
+            <div class="columns">
+                <Image src={profileImg} 
+                alt="Profile image" 
+                class="avatar"
+                width={140} 
+                height={140}
+                />
+                <div class="rows">
+                    <div class="columns">
+                        <Heading tagName="h1" size="h2">
+                            My Blog
+                        </Heading>
+                        <!-- Page placeholder -->
+                    </div>
+                    <p>I like to write about productivity QA and
+                        best practices for software development.</p>
+                </div>
+            </div>
+            <div class="grid-wrapper">
+                {allPosts.map((p)=> <PostCard post={p}/>)}
+            </div>
+        </div>
+    </section>
+
+
+</BaseLayout>
