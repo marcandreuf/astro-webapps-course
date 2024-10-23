@@ -1,0 +1,60 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// Components
+import Hero from "@/components/projects/hero.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import { getCollection } from "astro:content";
+import ProjectTile from "@/components/ui/ProjectTile.astro";
+import { Icon } from "astro-icon/components";
+
+const projects = await getCollection("projects");
+const tools = await getCollection("tools");
+
+
+---
+
+<BaseLayout title="Marc Andreu Projects" 
+	description="Here are some recent projects I've done for clients." > 
+	<div>
+		<Hero />
+		<div class="container">
+			<div class="filter-wrapper">
+				<div class="columns">
+					<p>Filter by tools:</p>
+					<!-- check if there are filters -->
+					 <button class="btn badge relative"
+					 aria-pressed="true">
+						<Icon name="icon--close"
+						aria-hidden="true"
+						size={18}
+						class="close" />
+						<span>Clear All</span>
+					</button>
+				</div>
+				<ul>
+					{tools.map((t)=>(
+						<li>
+							<button class="btn badge relative"
+								data-tool={t.id}
+								aria-pressed="true" >
+								<span>{t.data.title}</span>
+								<Icon name="icon--close"
+								aria-hidden="true"
+								size={18}
+								class="close" />
+							</button>
+						</li>
+					))}
+				</ul>
+			</div>
+	</div>
+
+		<div class="grid-wrapper">
+			{projects.map(({data})=>
+			<ProjectTile data={data}/> )}
+		</div>
+	</div>
+
+	<ContactForm />
+</BaseLayout>
