@@ -1,0 +1,22 @@
+---
+// components
+import Nav from "@/components/Nav.astro";
+import BaseHead from "./BaseHead.astro";
+
+// styles
+import "@/styles/global.css";
+---
+
+<html lang="en">
+  <BaseHead {...Astro.props} />
+  <body>
+    <Nav />
+    <main class={Astro.url.pathname !== "/checkout" ? "container" : ""}>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<script>
+  import "@/lib/global.ts";
+</script>

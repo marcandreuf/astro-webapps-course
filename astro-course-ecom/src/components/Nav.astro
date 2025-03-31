@@ -1,0 +1,22 @@
+---
+import { Icon } from "astro-icon/components";
+
+let cartItemsCount = 0;
+
+if (Astro.cookies.has("cartItems")) {
+  const cookie = Astro.cookies.get("cartItems")?.value as unknown as string;
+  cartItemsCount = JSON.parse(cookie).length;
+}
+---
+
+<nav>
+  <div>
+    <a href="/" aria-label="Home" class="btn logomark">
+      <Icon name="pin" width="24" height="24" />
+      <span>Astro Pins</span>
+    </a>
+    <a href="/cart" class="btn icon" aria-label="Go to Checkout">
+      <Icon name="cart" width="32" height="32" />
+    </a>
+  </div>
+</nav>

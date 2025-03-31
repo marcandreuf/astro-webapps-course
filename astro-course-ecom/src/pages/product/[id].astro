@@ -1,0 +1,32 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+---
+
+<BaseLayout>
+  <div class="product-container">
+    <Image
+      src="https://placehold.co/450x450"
+      alt={"_ALT_"}
+      height={450}
+      width={450}
+    />
+    <div class="grid-md">
+      <div class="grid-sm">
+        <h1>{"_NAME_"}</h1>
+        <p>{"_DESCRIPTION_"}</p>
+      </div>
+      <div class="grid-sm">
+        <p class="price">{"_PRICE_"}</p>
+        <button
+          class="btn"
+          data-cart
+          data-action="increment"
+          data-productid={"_PRODUCT_ID_"}
+        >
+          Add to cart
+        </button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

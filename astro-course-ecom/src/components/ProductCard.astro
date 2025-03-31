@@ -1,0 +1,15 @@
+---
+import { Image } from "astro:assets";
+---
+
+<li class="product-card grid-xs">
+  <Image
+    src="https://placehold.co/320x320"
+    alt={"_TODO_"}
+    height={320}
+    width={320}
+  />
+  <h2>{"_NAME_"}</h2>
+  <p>{"_PRICE_"}</p>
+  <a href={`/product/${"_PRODUCT_ID_"}`} class="btn">View More</a>
+</li>
