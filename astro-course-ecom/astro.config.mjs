@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 
 import icon from "astro-icon";
@@ -24,4 +24,11 @@ export default defineConfig({
   adapter: node({
     mode: "standalone",
   }),
+
+  env: {
+    schema: {
+      PUBLIC_STRIPE_KEY: envField.string({ context: "client", access: "public" }),
+      SECRET_STRIPE_KEY: envField.string({ context: "server", access: "secret" }),
+    },
+  },
 });

@@ -1,10 +1,15 @@
 ---
+import ProductCard from "@/components/ProductCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const products = await getCollection("products");
+console.log(products);
 ---
 
 <BaseLayout>
   <h1>Astro Pin Products</h1>
   <ul class="product-list">
-    <!-- PRODUCT LIST -->
+    {products.map((product) => <ProductCard product={product} />)}
   </ul>
 </BaseLayout>
