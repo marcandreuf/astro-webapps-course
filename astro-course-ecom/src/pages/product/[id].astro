@@ -1,28 +1,41 @@
 ---
+const { id } = Astro.params;
+
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import { getProductPrice } from "@/lib/cart";
+
+const product = await getEntry("products", id as string);
+if(!product) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
+}
+
+const price = await getProductPrice(product);
+
 ---
 
 <BaseLayout>
   <div class="product-container">
     <Image
-      src="https://placehold.co/450x450"
-      alt={"_ALT_"}
+      src={product.data.images[0]}
+      loading="eager"
+      alt={product.data.name}
       height={450}
       width={450}
     />
     <div class="grid-md">
       <div class="grid-sm">
-        <h1>{"_NAME_"}</h1>
-        <p>{"_DESCRIPTION_"}</p>
+        <h1>{product.data.name}</h1>
+        <p>{product.data.description }</p>
       </div>
       <div class="grid-sm">
-        <p class="price">{"_PRICE_"}</p>
+        <p class="price">{price}</p>
         <button
           class="btn"
           data-cart
           data-action="increment"
-          data-productid={"_PRODUCT_ID_"}
+          data-productid={product.data.id} }
         >
           Add to cart
         </button>
