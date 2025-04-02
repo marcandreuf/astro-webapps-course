@@ -4,25 +4,47 @@ import {
   saveCartCookie,
 } from "./utils";
 
-const quantityEls = document.querySelectorAll(
-  "[data-quantity]"
-) as NodeListOf<HTMLElement>;
+const cardItems = document.querySelectorAll(
+  "[data-cart-item]"
+) as NodeListOf<HTMLDivElement>;
+
 
 document.addEventListener("cart:updated", () => {
-  if (!quantityEls) {
+  if(!cardItems) {
     return;
   }
+  
+  const cookieCartItems = getCartCookie();
 
-  const cartItems = getCartCookie();
-
-  quantityEls.forEach((el) => {
+  cardItems.forEach((el) => {
     const productId = el.dataset.productid;
-
     if (!productId) {
       return;
     }
 
-    el.textContent = cartItems.filter((id: string) => id === productId).length;
+    const priceItem = el.querySelector("[data-price]") as HTMLElement;
+    const priceAttribute = priceItem.dataset.unitAmount;
+    const price = parseFloat(priceAttribute as string);
+    const currencyAttirbute = priceItem.dataset.currency;
+    if (!priceItem || !priceAttribute || !currencyAttirbute) {
+      return; 
+    }
+
+    const quantityItem = el.querySelector("[data-quantity]");
+    if(!quantityItem) {
+      return;
+    }
+
+
+    const cookieItemQuantity = 
+      cookieCartItems.filter((id: string) => id === productId).length;
+    const totalItemPrice = (price * cookieItemQuantity).toLocaleString("en-US", {
+      style: "currency",
+      currency: currencyAttirbute,
+    });
+
+    quantityItem.textContent = cookieItemQuantity.toString();    
+    priceItem.textContent = totalItemPrice;
   });
 });
 

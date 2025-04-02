@@ -29,8 +29,13 @@ const productPrice = await getTotalItemPrice(productPriceItem, cartItem.quantity
     height={150}
     width={150}
   />
-  <div class="grid-xs">
-    <p id="price" data-unit-amount={productPriceItem.data.unit_amount/100} data-currency={productPriceItem.data.currency}>{productPrice}</p>
+  <div class="grid-xs"
+    data-cart-item
+    data-productid={data.id}>
+    <p 
+      data-price
+      data-unit-amount={productPriceItem.data.unit_amount/100} 
+      data-currency={productPriceItem.data.currency}>{productPrice}</p>
     <h2>{data.name}</h2>
     <div class="cart-button-wrapper">
       <button
@@ -39,60 +44,18 @@ const productPrice = await getTotalItemPrice(productPriceItem, cartItem.quantity
         data-action="decrement"
         data-productid={data.id}
         aria-label={`Remove one ${data.name} to cart`}
-      >
-        <Icon name="minus" width="16" height="16" />
+      ><Icon name="minus" width="16" height="16" />
       </button>
-      <p id="quantity" data-quantity data-productId={data.id}>{cartItem.quantity}</p>
+      <p data-quantity>{cartItem.quantity}</p>
       <button
         class="btn cart"
         data-cart
         data-action="increment"
         data-productid={data.id}
         aria-label={`Add one ${data.name} to cart`}
-      >
-        <Icon name="plus" width="16" height="16" />
+      ><Icon name="plus" width="16" height="16" />
       </button>
     </div>
   </div>
 </li>
 
-<script>
-  import { getCartCookie } from "@/lib/utils";
-
-  const getProductquantity = () => {    
-    const quantityElement = document.querySelector("#quantity") as HTMLParagraphElement;
-    return parseInt(quantityElement.textContent as string);
-  }
-
-  //Get product price
-  const getProductPrice = () => {
-    const priceElement = document.querySelector("#price") as HTMLParagraphElement;
-    // get the data attribute priceValue of the price
-    const unitAmount = priceElement.getAttribute("data-unit-amount");       
-    return parseFloat(unitAmount as string);
-  }
-
-  const updateProductTotalPrice = () => {
-    const quantity = getProductquantity();
-    console.log('quantity: ', quantity);
-    const price = getProductPrice();
-    console.log('price: ', price);
-    const totalPrice = quantity * price;
-    console.log('totalprice: ', totalPrice);
-    // get price currency attribute
-    const currency = document.querySelector("#price")?.getAttribute("data-currency") as string;
-    // update the total price
-
-    const priceElement = document.querySelector("#price") as HTMLParagraphElement;
-    const formattedPrice = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-    }).format(totalPrice);
-    priceElement.textContent = formattedPrice;
-   
-  };
-
-  //TODO add even listeners for increment and decrement to calcualte the total item price
-  document.addEventListener("cart:updated", updateProductTotalPrice);
-
-</script>
