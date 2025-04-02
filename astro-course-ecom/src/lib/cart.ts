@@ -21,12 +21,35 @@ export const getTotalCartItems = async (
 };
 
 export const getProductPrice = async (product: CollectionEntry<"products">) => {
+  return getTotalProductPrice(product, 1);
+};
+
+export const getProductPriceItem = async (defaultPrice: string) => {
+  return await getEntry("prices", defaultPrice);
+};
+
+export const getTotalProductPrice = async (
+  product: CollectionEntry<"products">,
+  quantity: number
+) => {
   const priceItem = await getEntry("prices", product.data.default_price);
 
   return priceItem
-    ? (priceItem.data.unit_amount / 100).toLocaleString("en-US", {
+    ? ((priceItem.data.unit_amount / 100) * quantity).toLocaleString("en-US", {
         style: "currency",
         currency: priceItem?.data.currency,
       })
     : "N/A";
-};
+}
+
+export const getTotalItemPrice = async (
+  priceItem: CollectionEntry<"prices">,
+  quantity: number
+) => {
+  return priceItem
+    ? ((priceItem.data.unit_amount / 100) * quantity).toLocaleString("en-US", {
+        style: "currency",
+        currency: priceItem?.data.currency,
+      })
+    : "N/A";
+}

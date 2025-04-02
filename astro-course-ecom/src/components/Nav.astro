@@ -17,6 +17,23 @@ if (Astro.cookies.has("cartItems")) {
     </a>
     <a href="/cart" class="btn icon" aria-label="Go to Checkout">
       <Icon name="cart" width="32" height="32" />
+      <span class="count" id="cart-count"
+      >{cartItemsCount > 0 ? cartItemsCount : ""}</span>
     </a>
   </div>
 </nav>
+
+<script>
+  import { getCartCookie } from "@/lib/utils";
+
+  const countCartSpan = document.querySelector("#cart-count") as HTMLSpanElement;
+
+  const updateCartValue = () => {
+    const cartItems = getCartCookie();
+    countCartSpan.textContent = 
+      cartItems.length === 0 ? "" : cartItems.length.toString();
+  };
+
+  document.addEventListener("cart:updated", updateCartValue);
+
+</script>

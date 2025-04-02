@@ -1,5 +1,5 @@
 ---
-import type { FinalCartItem } from "@/lib/cart";
+import { getTotalItemPrice, getProductPriceItem, type FinalCartItem } from "@/lib/cart";
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 
@@ -8,38 +8,91 @@ type Props = {
 };
 
 const { cartItem } = Astro.props;
+
+const { data } = cartItem.product;
+
+const productPriceItem = await getProductPriceItem(data.default_price);
+
+if (!productPriceItem) {
+  throw new Error('Product price not found');
+}
+
+const productPrice = await getTotalItemPrice(productPriceItem, cartItem.quantity);
+
+
 ---
 
 <li class="cart-item">
   <Image
-    src="https://placehold.co/150x150"
-    alt={"_TODO_"}
+    src={data.images[0]}
+    alt={data.name}}
     height={150}
     width={150}
   />
   <div class="grid-xs">
-    <p>{"_PRICE_"}</p>
-    <h2>{"_NAME_"}</h2>
+    <p id="price" data-unit-amount={productPriceItem.data.unit_amount/100} data-currency={productPriceItem.data.currency}>{productPrice}</p>
+    <h2>{data.name}</h2>
     <div class="cart-button-wrapper">
       <button
         class="btn cart"
         data-cart
         data-action="decrement"
-        data-productid={"_PRODUCT_ID_"}
-        aria-label={`Remove one ${"_NAME_"} to cart`}
+        data-productid={data.id}
+        aria-label={`Remove one ${data.name} to cart`}
       >
         <Icon name="minus" width="16" height="16" />
       </button>
-      <p data-quantity data-productId={"_PRODUCT_ID_"}>{"_QUANTITY_"}</p>
+      <p id="quantity" data-quantity data-productId={data.id}>{cartItem.quantity}</p>
       <button
         class="btn cart"
         data-cart
         data-action="increment"
-        data-productid={"_PRODUCT_ID_"}
-        aria-label={`Add one ${"_NAME_"} to cart`}
+        data-productid={data.id}
+        aria-label={`Add one ${data.name} to cart`}
       >
         <Icon name="plus" width="16" height="16" />
       </button>
     </div>
   </div>
 </li>
+
+<script>
+  import { getCartCookie } from "@/lib/utils";
+
+  const getProductquantity = () => {    
+    const quantityElement = document.querySelector("#quantity") as HTMLParagraphElement;
+    return parseInt(quantityElement.textContent as string);
+  }
+
+  //Get product price
+  const getProductPrice = () => {
+    const priceElement = document.querySelector("#price") as HTMLParagraphElement;
+    // get the data attribute priceValue of the price
+    const unitAmount = priceElement.getAttribute("data-unit-amount");       
+    return parseFloat(unitAmount as string);
+  }
+
+  const updateProductTotalPrice = () => {
+    const quantity = getProductquantity();
+    console.log('quantity: ', quantity);
+    const price = getProductPrice();
+    console.log('price: ', price);
+    const totalPrice = quantity * price;
+    console.log('totalprice: ', totalPrice);
+    // get price currency attribute
+    const currency = document.querySelector("#price")?.getAttribute("data-currency") as string;
+    // update the total price
+
+    const priceElement = document.querySelector("#price") as HTMLParagraphElement;
+    const formattedPrice = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(totalPrice);
+    priceElement.textContent = formattedPrice;
+   
+  };
+
+  //TODO add even listeners for increment and decrement to calcualte the total item price
+  document.addEventListener("cart:updated", updateProductTotalPrice);
+
+</script>

@@ -1,18 +1,42 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getTotalCartItems } from "@/lib/cart";
+import CartItem from "@/components/CartItem.astro";
+
+const cartCookie = Astro.cookies.get("cartItems")?.value as unknown as string;
+
+const totalCartItems = await getTotalCartItems(
+  cartCookie ? JSON.parse(cartCookie) : []
+);
+
 ---
 
 <BaseLayout>
   <h1>Cart</h1>
 
-  <!-- {<p>Cart is empty</p>} -->
+  {totalCartItems.length === 0 && <p>Cart is empty</p>}
 
-  <ul class="cart-list">
-    <!-- "_TODO_" -->
-  </ul>
+  {totalCartItems.length > 0 && (
+    <ul class="cart-list">
+      {totalCartItems.map((cartItem) => <CartItem cartItem={cartItem} />)}
+    </ul>
 
-  <div class="flex-sm flex-wrap">
-    <button id="delete-cart-btn" class="btn warning">Remove All</button>
-    <a href="/checkout" class="btn">Checkout</a>
-  </div>
+    <div class="flex-sm flex-wrap">
+      <button id="delete-cart-btn" class="btn warning">Remove All</button>
+      <a href="/checkout" class="btn">Checkout</a>
+    </div>
+  )}
 </BaseLayout>
+
+<script>
+  import { deleteCartCookie } from "@/lib/utils";
+
+  const deleteCartBtn = document.querySelector("#delete-cart-btn") as HTMLButtonElement;
+
+  deleteCartBtn.addEventListener("click", () => {
+    deleteCartCookie();
+    window.location.href = "/";
+  });
+</script>
+
+
