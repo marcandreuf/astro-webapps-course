@@ -8,13 +8,17 @@ const cardItems = document.querySelectorAll(
   "[data-cart-item]"
 ) as NodeListOf<HTMLDivElement>;
 
+const cartTotal = document.querySelector("[data-cart-total]") as HTMLElement;
+
 
 document.addEventListener("cart:updated", () => {
-  if(!cardItems) {
+  if(!cardItems || !cartTotal) {
     return;
   }
   
   const cookieCartItems = getCartCookie();
+
+  let totalCartPrice = 0
 
   cardItems.forEach((el) => {
     const productId = el.dataset.productid;
@@ -35,7 +39,6 @@ document.addEventListener("cart:updated", () => {
       return;
     }
 
-
     const cookieItemQuantity = 
       cookieCartItems.filter((id: string) => id === productId).length;
     const totalItemPrice = (price * cookieItemQuantity).toLocaleString("en-US", {
@@ -45,6 +48,13 @@ document.addEventListener("cart:updated", () => {
 
     quantityItem.textContent = cookieItemQuantity.toString();    
     priceItem.textContent = totalItemPrice;
+
+    totalCartPrice += price * cookieItemQuantity;
+  });
+
+  cartTotal.textContent = totalCartPrice.toLocaleString("en-US", {
+    style: "currency",
+    currency: "eur",
   });
 });
 

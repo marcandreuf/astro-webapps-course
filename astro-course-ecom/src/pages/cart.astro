@@ -2,12 +2,17 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getTotalCartItems } from "@/lib/cart";
 import CartItem from "@/components/CartItem.astro";
+import { getTotalCartPrice } from "@/lib/cart";
+
 
 const cartCookie = Astro.cookies.get("cartItems")?.value as unknown as string;
 
 const totalCartItems = await getTotalCartItems(
   cartCookie ? JSON.parse(cartCookie) : []
 );
+
+const totalCartPrice = 
+  await getTotalCartPrice(totalCartItems, "eur");
 
 ---
 
@@ -18,8 +23,10 @@ const totalCartItems = await getTotalCartItems(
 
   {totalCartItems.length > 0 && (
     <ul class="cart-list">
-      {totalCartItems.map((cartItem) => <CartItem cartItem={cartItem} />)}
+      {totalCartItems.map((cartItem) => <CartItem cartItem={cartItem} />)}      
+      <p data-cart-total class="cart-total">Total: {totalCartPrice}</p>
     </ul>
+
 
     <div class="flex-sm flex-wrap">
       <button id="delete-cart-btn" class="btn warning">Remove All</button>

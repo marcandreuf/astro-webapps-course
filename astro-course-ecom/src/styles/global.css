@@ -422,6 +422,13 @@ nav div {
   place-items: center;
   gap: var(--space-2xs);
 }
+.cart-total {
+  font-weight: bold; 
+  font-size: x-large; 
+  text-align: right; 
+  width: 100%; 
+  padding-right: 10px
+}
 
 .checkout-container {
   width: 100%;

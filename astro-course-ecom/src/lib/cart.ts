@@ -33,13 +33,47 @@ export const getTotalProductPrice = async (
   quantity: number
 ) => {
   const priceItem = await getEntry("prices", product.data.default_price);
+  if(!priceItem) {
+    return "N/A"; 
+  }
+  return getTotalItemPrice(priceItem, quantity);
+}
 
-  return priceItem
-    ? ((priceItem.data.unit_amount / 100) * quantity).toLocaleString("en-US", {
-        style: "currency",
-        currency: priceItem?.data.currency,
-      })
-    : "N/A";
+export const getTotalProductPriceValue = async (
+  product: CollectionEntry<"products">,
+  quantity: number
+) => {
+  const priceItem = await getEntry("prices", product.data.default_price);
+  if(!priceItem) {
+    return 0; 
+  }
+  return getTotalItemPriceValue(priceItem, quantity);
+}
+
+export const getTotalCartPrice = async (
+  cartItems: FinalCartItem[],
+  currency: string
+) => {
+  const prices = await Promise.all(
+    cartItems.map(cartItem => 
+      getTotalProductPriceValue(cartItem.product, cartItem.quantity)
+    )
+  );
+  const totalCartPrice = prices.reduce((acc, price) => acc + price, 0);
+
+  return totalCartPrice.toLocaleString("en-US", {
+    style: "currency",
+    currency: currency,
+  });
+}
+
+
+
+export const getTotalItemPriceValue = (
+  priceItem: CollectionEntry<"prices">,
+  quantity: number
+) => {
+  return (priceItem.data.unit_amount / 100) * quantity;
 }
 
 export const getTotalItemPrice = async (
@@ -47,7 +81,7 @@ export const getTotalItemPrice = async (
   quantity: number
 ) => {
   return priceItem
-    ? ((priceItem.data.unit_amount / 100) * quantity).toLocaleString("en-US", {
+    ? (getTotalItemPriceValue(priceItem, quantity)).toLocaleString("en-US", {
         style: "currency",
         currency: priceItem?.data.currency,
       })
