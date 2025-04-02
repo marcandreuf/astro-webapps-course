@@ -23,8 +23,10 @@ const totalCartPrice =
 
   {totalCartItems.length > 0 && (
     <ul class="cart-list">
-      {totalCartItems.map((cartItem) => <CartItem cartItem={cartItem} />)}      
-      <p data-cart-total class="cart-total">Total: {totalCartPrice}</p>
+      {totalCartItems.map((cartItem) => <CartItem cartItem={cartItem} />)} 
+      <span style="display: flex; justify-content: flex-end;">
+        <p class="cart-total">Total:</p><span data-cart-total class="cart-total">{totalCartPrice}</span>
+      </span>     
     </ul>
 
 
