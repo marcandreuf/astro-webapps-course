@@ -1,13 +1,74 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { PUBLIC_STRIPE_KEY } from "astro:env/client";
+import { SECRET_STRIPE_KEY } from "astro:env/server";
+import { getTotalCartItems } from "@/lib/cart";
+import { string } from "astro:schema";
+import Stripe from "stripe";
+import { getCollection } from "astro:content";
+
+const { origin } = Astro.url;
+
+// get cart itmes from cookies
+const cartCookie = Astro.cookies.get("cartItems")?.value as unknown as string;
+
+const totalCartItems = await getTotalCartItems(
+  cartCookie ? JSON.parse(cartCookie) : []
+);
+
+if(totalCartItems.length === 0) {
+  return Astro.redirect("/");
+}
+
+const lineItems = totalCartItems.map((item) => ({
+  price: item.product.data.default_price,
+  quantity: item.quantity,
+}));
+
+const stripe = new Stripe(SECRET_STRIPE_KEY, );
+
+const checkoutSession = await stripe.checkout.sessions.create({
+  ui_mode: "embedded",
+  mode: "payment",
+  line_items: lineItems,
+  return_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+  automatic_tax: { enabled: true },
+})
+
+
 ---
 
 <BaseLayout>
   <div
     id="checkout"
     class="checkout-container"
-    data-stripe-key={"_STRIPE_PUBLIC_KEY_"}
-    data-client-secret={"_STRIPE_CLIENT_SECRET_"}
+    data-stripe-key={PUBLIC_STRIPE_KEY}
+    data-client-secret={checkoutSession.client_secret}
   >
   </div>
 </BaseLayout>
+
+<script>
+  import { loadStripe } from "@stripe/stripe-js";
+
+  const checkoutContainer = document.querySelector("#checkout") as HTMLDivElement;
+
+  const { clientSecret, stripeKey } = checkoutContainer.dataset;
+
+  if(!clientSecret || !stripeKey) {
+    throw new Error("Missing client secret or stripe key");
+  }
+
+  const stripe = await loadStripe(stripeKey);
+
+  const checkout = await stripe?.initEmbeddedCheckout({
+    fetchClientSecret: () => Promise.resolve(clientSecret),
+  });
+
+  if(!checkout) {
+    throw new Error("Failed to initialize checkout");
+  }
+
+  checkout.mount("#checkout");
+
+</script>

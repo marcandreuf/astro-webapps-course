@@ -1,11 +1,43 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SECRET_STRIPE_KEY } from "astro:env/server";
+import Stripe from "stripe";
+
+const sessionId = Astro.url.searchParams.get("session_id");
+
+if(!sessionId) {
+  Astro.redirect("/");
+}
+
+const stripe = new Stripe(SECRET_STRIPE_KEY);
+
+const stripeSession = await stripe.checkout.sessions.retrieve(sessionId as string);
+console.log(stripeSession);
+
+
+if(!stripeSession || !stripeSession.customer_details) {
+  Astro.redirect("/");
+}
+
+const { name = '', email = '' } = stripeSession.customer_details ?? {};
+
+Astro.cookies.delete("cartItems");
+
 ---
 
 <BaseLayout>
-  <div class="success">
-    <h1>Thank you for your purchase, {"_NAME_"}!</h1>
-    <p>We've sent a receipt to {"_EMAIL_"}.</p>
-    <a href="/" class="btn">Go home</a>
-  </div>
+  {stripeSession.payment_status === "unpaid" && (
+    <div class="error">
+      <h1>Payment failed</h1>
+      <p>There was an issue processing your payment. Please try again.</p>
+      <a href="/" class="btn">Go home</a>
+    </div>
+  )}
+  {stripeSession.payment_status === "paid" && (
+    <div class="success">
+      <h1>Thank you for your purchase, {name}!</h1>
+      <p>We've sent a receipt to {email}.</p>
+      <a href="/" class="btn">Go home</a>
+    </div>
+  )}
 </BaseLayout>

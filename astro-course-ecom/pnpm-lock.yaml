@@ -14,6 +14,9 @@ importers:
       '@astrojs/node':
         specifier: ^9.1.3
         version: 9.1.3(astro@5.5.6(@types/node@22.13.17)(rollup@4.38.0)(typescript@5.8.2)(yaml@2.7.1))
+      '@stripe/stripe-js':
+        specifier: ^7.0.0
+        version: 7.0.0
       astro:
         specifier: ^5.5.6
         version: 5.5.6(@types/node@22.13.17)(rollup@4.38.0)(typescript@5.8.2)(yaml@2.7.1)
@@ -533,6 +536,10 @@ packages:
 
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
+
+  '@stripe/stripe-js@7.0.0':
+    resolution: {integrity: sha512-0AWkP+hoIXB5O34FGY7jh687ZPlOqLqMkJDkiSXcp4TaWWidnxjsZSp0xkjyAWbIz4+j1BFXDAK01Rqb7ceBRA==}
+    engines: {node: '>=12.16'}
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -2591,6 +2598,8 @@ snapshots:
       '@types/hast': 3.0.4
 
   '@shikijs/vscode-textmate@10.0.2': {}
+
+  '@stripe/stripe-js@7.0.0': {}
 
   '@trysound/sax@0.2.0': {}
 
